@@ -3,10 +3,11 @@ const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const isDev = process.env.NODE_ENV === 'development';
+const mode = process.env.NODE_ENV;
 const basePath = path.resolve(__dirname, 'src');
 
 module.exports = {
-  mode: isDev ? 'development' : 'production',
+  mode: mode,
   context: basePath,
   entry: {
     main: './index.js',
