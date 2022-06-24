@@ -4,10 +4,11 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const isDev = process.env.NODE_ENV === 'development';
 const mode = process.env.NODE_ENV;
+const basePath = path.resolve(__dirname, 'src');
 
 module.exports = {
   mode: mode,
-  context: path.resolve(__dirname, 'src'),
+  context: basePath,
   entry: {
     main: './index.js',
   },
@@ -16,6 +17,12 @@ module.exports = {
     path: path.resolve(__dirname, 'public'),
     assetModuleFilename: 'assets/[hash][ext][query]',
     clean: true,
+  },
+  devtool: isDev ? 'inline-source-map' : false,
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
   },
   devServer: {
     static: {
@@ -60,7 +67,7 @@ module.exports = {
         test: /\.(png|svg|jpg|jpeg|gif|ico)$/i,
         type: 'asset/resource',
         generator: {
-          filename: 'img/[name][ext][query]',
+          filename: `img/[${isDev ? 'name' : 'hash'}][ext][query]`,
         },
       },
       {
@@ -88,11 +95,10 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.js', '.ts', '.tsx', '.jsx'], // Возможность импорта указанных расширений файлов, без указания их расширения
+    extensions: ['.js', '.ts', '.tsx', '.jsx'],
     alias: {
-      // Объект для настройки алиасов (сокращений части пути импорта) к папкам импортируемых файлов
-      '@src': path.resolve(__dirname, 'src'), // Название свойство = сокращение части пути импорта. Значение = Часть пути, которая подставится вместо алиаса
-      '@img': path.resolve(__dirname, 'src', 'img'), // '@img/some.png' = 'project_folder_path/src/img/some.png'
+      '@src': path.join(basePath, '/'),
+      '@img': path.join(basePath, '/img/'),
     },
   },
 };
